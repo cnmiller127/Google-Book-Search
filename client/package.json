@@ -2,7 +2,8 @@
   "name": "mern",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://localhost:3001/",
+  "proxy": "http://127.0.0.1:3001/",
+  "secure": false,
   "dependencies": {
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
