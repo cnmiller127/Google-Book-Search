@@ -5,12 +5,16 @@ import {BrowserRouter as Router, Route, Switch} from "react-router-dom";
 
 function App() {
   return (
+  <Router>
     <div>
       <Nav />
-      <Router>
-          <Route path = {Search} />
-      </Router>
+        <Switch>
+          <Route exact path = {"/" || "/search"}>
+            <Search />
+          </Route>
+        </Switch>
     </div>
+  </Router>
   );
 }
 

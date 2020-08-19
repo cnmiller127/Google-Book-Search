@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 import Jumbotron from "../components/Jumbotron";
-import SaveBtn from "../components/SaveBtn";
-import GoogleAPI from "../utils/GoogleAPI";
+import DeleteBtn from "../components/DeleteBtn";
 import MongoAPI from "../utils/MongoAPI";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input, TextArea, FormBtn } from "../components/Form";
-import useDebounce from "../utils/deounceHook"
+
 
 function Books() {
   // Setting our component's initial state
@@ -17,63 +16,29 @@ function Books() {
     synopsis: ""
   })
 
-  const debouncedSearchTerm = useDebounce(formObject, 5000);
+  const debouncedSearchTerm = useDebounce(formObject, 1000);
 
   // Load all books and store them with setBooks
   useEffect( () => {
-    if(!formObject.title && !formObject.author){
-      return;
-    }
-    if(debouncedSearchTerm){
-       loadBooks(formObject.title, formObject.author).then((data) =>{
-        if(data!== undefined && data.length !== 0){
-            setBooks(data);
-            console.log(books);
-          }
-        })
-      }
-      
-      
-  }, [debouncedSearchTerm])
+      // Will mount
+  }, [])
 
   // Loads all books and sets them to books
   async function loadBooks(title, author) {
     try{
-    let res = await GoogleAPI.getBooks(title, author);
-    console.log(res.data.items)
-    return res.data.items;
+    // get route from MONGODB goes here
     }
     catch(err){
         throw err;
     }
 }
 
+
   function handleInputChange(event) {
     //console.log(event.target.value)
     const { name, value } = event.target;
     setFormObject({...formObject, [name]: value})
   };
-
-  function saveBook(bookInfo){
-    var thumb;
-    console.log(bookInfo, "BOOK INFO");
-    if(bookInfo.volumeInfo.imageLinks.thumbnail !== undefined){
-      thumb = bookInfo.volumeInfo.imageLinks.thumbnail
-    }
-    else{
-      thumb = "";
-    }
-    var book = {
-    title: bookInfo.volumeInfo.title,
-    author: bookInfo.volumeInfo.authors,
-    link: thumb,
-    thumbnail: bookInfo.selfLink 
-    }
-    console.log(book);
-    MongoAPI.saveBook(book).then(() => {
-      alert(`${book.volumeInfo.title} has been saved to your library!`);
-    })
-  }
 
 
     return (
@@ -95,11 +60,11 @@ function Books() {
                 name="author"
                 placeholder="Author (required)"
               />
-              {/* <TextArea
+              <TextArea
                 onChange={() => {}}
                 name="synopsis"
                 placeholder="Synopsis (Optional)"
-              /> */}
+              />
               <FormBtn
                 disabled={!(formObject.author && formObject.title)}
                 onClick={() => {}}
@@ -120,15 +85,13 @@ function Books() {
                 {books.map(book => {
                   return (
                     <ListItem key={book.id}>
-                      {(book.volumeInfo.imageLinks.thumbnail !== undefined) ? (
+                      {(book.volumeInfo.imageLinks.thumbnail) ? (
   
-                      <img src = {book.volumeInfo.imageLinks.thumbnail } />
+                      <img src = {book.volumeInfo.imageLinks.thumbnail} />
                       ) : (<h3>Image Unavailable</h3>)}
                         <strong>
                           {book.volumeInfo.title} by {book.volumeInfo.authors}
                         </strong>
-                        <SaveBtn onClick={() => saveBook(book)} />
-                        
                     </ListItem>
                   );
                 })}
@@ -143,4 +106,4 @@ function Books() {
   }
 
 
-export default Books;
+export default Saved;

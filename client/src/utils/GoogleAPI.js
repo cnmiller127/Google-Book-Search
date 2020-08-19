@@ -5,11 +5,24 @@ export default {
    
   // Gets all books
   getBooks: function(title, author) {
-    var apiKey = "AIzaSyCuk_czwYFGdVmsLa50TR-c4Ttibb1Fwwg";
-    var query = `https://www.googleapis.com/books/v1/volumes?q=${title}+inauthor:${author}&key=${key}`;
-     
-    return axios.get(query);
+      title = title.split(" ").join("").trim().toLowerCase();
+      author = author.split(" ").join("").trim().toLowerCase();
+      var key = "AIzaSyBiUrKqrG5TvDMPcAfISvOfiH1uy6YaGTg";
+      var query;
+
+      if(title && author){
+        query = `https://www.googleapis.com/books/v1/volumes?q=${title}+intitle:${title}+inauthor:${author}&key=${key}`;
+      }
+      else if(title && !author){
+        query = `https://www.googleapis.com/books/v1/volumes?q=${title}+intitle:${title}&key=${key}`;
+      }
+      else if(!title && author){
+        query = `https://www.googleapis.com/books/v1/volumes?q=${author}+inauthor:${author}&key=${key}`
+      }
+    console.log(query);
+    return axios.get(query)
   }
-  
-};
-//https://www.googleapis.com/books/v1/volumes?q=flowers+inauthor:keyes&key=AIzaSyCuk_czwYFGdVmsLa50TR-c4Ttibb1Fwwg
+           
+}
+//https://www.googleapis.com/books/v1/volumes?q=rowling+inauthor:rowling&key=AIzaSyBiUrKqrG5TvDMPcAfISvOfiH1uy6YaGTg
+//https://www.googleapis.com/books/v1/volumes?q=j.krowling+inauthor:j.krowling&key=AIzaSyBiUrKqrG5TvDMPcAfISvOfiH1uy6YaGTg
