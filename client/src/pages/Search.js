@@ -70,8 +70,9 @@ function Books() {
     thumbnail: bookInfo.selfLink 
     }
     console.log(book);
-    MongoAPI.saveBook(book).then(() => {
+    MongoAPI.saveBook(book).then((res) => {
       alert(`${book.volumeInfo.title} has been saved to your library!`);
+      return res.json();
     })
   }
 
