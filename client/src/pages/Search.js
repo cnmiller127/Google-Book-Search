@@ -87,7 +87,7 @@ function Books() {
     console.log(book);
     MongoAPI.saveBook(book).then((res) => {
       hideSaveBtn(bookInfo);
-      alert(`${res} has been saved to your library!`);
+      alert(`${book.title} has been saved to your library!`);
       
     }).catch(err => {
       throw err; 
