@@ -1,22 +1,31 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import Jumbotron from "../components/Jumbotron";
 import DeleteBtn from "../components/DeleteBtn";
 import MongoAPI from "../utils/MongoAPI";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import DeleteBtnDisplay from "../components/DisplayDeleteBtn";
+import {NavContext} from "../../src/UserContext";
+import "./style.css";
+
 
 
 function Saved() {
   // Setting our component's initial state
-  const [books, setBooks] = useState([])
+const [books, setBooks] = useState([]);
 
-  
-console.log(books)
-  
+const NavStat = () => {
+  const contextVal = useContext(NavContext);
+  return contextVal;
+
+}
+  const navStatus = NavStat();
+  console.log(navStatus)
 
   // Load all books and store them with setBooks
   useEffect( () => {
+      navStatus.setStatus("lib");
+      console.log(navStatus.status);
       loadBooks().then(res => {
         console.log(res);
         setBooks(res);
@@ -48,7 +57,7 @@ async function handleDelete(id, title) {
   }
 }
 
-    return (
+    return ( 
       <Container fluid>
           <Row>
           <Col size = "12">
@@ -64,7 +73,7 @@ async function handleDelete(id, title) {
                     <ListItem key={book._id}>
                       {(book.thumbnail) ? (
   
-                      <img src = {book.thumbnail} />
+                      <img className = "book-img pr-2" src = {book.thumbnail} />
                       ) : (<h3>Image Unavailable</h3>)}
                         <strong>
                           {book.title} by {book.author.join(", ")}

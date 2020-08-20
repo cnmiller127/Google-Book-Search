@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext} from "react";
 import Jumbotron from "../components/Jumbotron";
 import SaveBtn from "../components/SaveBtn";
 import GoogleAPI from "../utils/GoogleAPI";
@@ -6,7 +6,8 @@ import MongoAPI from "../utils/MongoAPI";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
 import { Input} from "../components/Form";
-import useDebounce from "../utils/deounceHook"
+import useDebounce from "../utils/deounceHook";
+import {NavContext} from "../../src/UserContext";
 
 function Books() {
   // Setting our component's initial state
@@ -19,8 +20,17 @@ function Books() {
 
   const debouncedSearchTerm = useDebounce(formObject, 5000);
 
+  const NavStat = () => {
+    const contextVal = useContext(NavContext);
+    return contextVal;
+  
+  }
+    const navStatus = NavStat();
+    console.log(navStatus)
+
   // Load all books and store them with setBooks
   useEffect( () => {
+    navStatus.setStatus("home");
     if(!formObject.title && !formObject.author){
       return;
     }
@@ -93,9 +103,6 @@ function Books() {
       }
     })
     setBooks(booksTemp);
-  
-
-
   }
 
 
@@ -105,7 +112,7 @@ function Books() {
           <Col size = "12">
           
             <Jumbotron>
-              <h1 className ="hdr">Search books!</h1>
+              <h1 className ="hdr">Look for Books!</h1>
             </Jumbotron>
             <label>Search by book title and/or author: </label>
             <form>
@@ -135,7 +142,7 @@ function Books() {
                     <ListItem key={book.id}>
                       {(book.volumeInfo.imageLinks) ? (
                           (book.volumeInfo.imageLinks.thumbnail) ? (
-                      <img src = {book.volumeInfo.imageLinks.thumbnail } />) : 
+                      <img className = "book-img pr-2" src = {book.volumeInfo.imageLinks.thumbnail } />) : 
                       (
                         <img src = {book.volumeInfo.imageLinks.smallThumbnail } />)
                         

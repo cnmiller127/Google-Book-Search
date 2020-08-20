@@ -8,7 +8,7 @@ function App() {
   return (
   <Router>
     <div>
-      <Nav />
+    <Nav />
         <Switch>
           <Route exact path = {"/" || "/searchbooks"}>
             <Search />
@@ -23,3 +23,4 @@ function App() {
 }
 
 export default App;
+
