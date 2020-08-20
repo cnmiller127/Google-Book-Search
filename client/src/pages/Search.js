@@ -17,6 +17,8 @@ function Books() {
     synopsis: ""
   })
 
+  //const [saveIcons, setSaveIcons] = useState([true]);
+
   const debouncedSearchTerm = useDebounce(formObject, 5000);
 
   // Load all books and store them with setBooks
@@ -27,8 +29,13 @@ function Books() {
     if(debouncedSearchTerm){
        loadBooks(formObject.title, formObject.author).then((data) =>{
         if(data!== undefined && data.length !== 0){
+          
+          data.forEach(element => {
+            element.saved = false;
+          });
+          console.log(data);
             setBooks(data);
-            console.log(books);
+            //setSaveIcons([...saveIcons, ])
           }
         })
       }
@@ -54,7 +61,7 @@ function Books() {
     setFormObject({...formObject, [name]: value})
   };
 
-  function saveBook(bookInfo){
+  function saveClick(bookInfo){
     var thumb;
     console.log(bookInfo, "BOOK INFO");
     if(bookInfo.volumeInfo.imageLinks.thumbnail !== undefined){
@@ -66,14 +73,31 @@ function Books() {
     var book = {
     title: bookInfo.volumeInfo.title,
     author: bookInfo.volumeInfo.authors,
-    link: thumb,
-    thumbnail: bookInfo.selfLink 
+    link: bookInfo.selfLink ,
+    thumbnail: thumb
     }
     console.log(book);
     MongoAPI.saveBook(book).then((res) => {
-      alert(`${book.volumeInfo.title} has been saved to your library!`);
-      return res.json();
+      hideSaveBtn(bookInfo);
+      alert(`${res} has been saved to your library!`);
+      
+    }).catch(err => {
+      throw err; 
     })
+  }
+
+  function hideSaveBtn(book){
+    let booksTemp = [...books];
+    booksTemp.forEach( item => {
+      if(book.id === item.id)
+      {
+        item.saved = true;
+      }
+    })
+    setBooks(booksTemp);
+  
+
+
   }
 
 
@@ -128,7 +152,9 @@ function Books() {
                         <strong>
                           {book.volumeInfo.title} by {book.volumeInfo.authors}
                         </strong>
-                        <SaveBtn onClick={() => saveBook(book)} />
+                        {!book.saved ? (
+                        <SaveBtn onClick={() => saveClick(book)} />
+                        ) : null }
                         
                     </ListItem>
                   );

@@ -4,94 +4,69 @@ import DeleteBtn from "../components/DeleteBtn";
 import MongoAPI from "../utils/MongoAPI";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
 
 
-function Books() {
+function Saved() {
   // Setting our component's initial state
   const [books, setBooks] = useState([])
-  const [formObject, setFormObject] = useState({
-    title: "",
-    author: "",
-    synopsis: ""
-  })
 
-  const debouncedSearchTerm = useDebounce(formObject, 1000);
+  
+console.log(books)
+  
 
   // Load all books and store them with setBooks
   useEffect( () => {
-      // Will mount
+      loadBooks().then(res => {
+        console.log(res);
+        setBooks(res);
+      })
   }, [])
 
   // Loads all books and sets them to books
-  async function loadBooks(title, author) {
+  async function loadBooks() {
     try{
-    // get route from MONGODB goes here
+      let res = await MongoAPI.getBooks()
+      return res.data;
     }
     catch(err){
         throw err;
     }
 }
 
-
-  function handleInputChange(event) {
-    //console.log(event.target.value)
-    const { name, value } = event.target;
-    setFormObject({...formObject, [name]: value})
-  };
-
+async function handleDelete(id, title) {
+  
+  try{
+    
+      await MongoAPI.deleteBook(id);
+      const res = await loadBooks();
+      setBooks(res);
+      alert(title + " has been deleted from your library.")
+  }
+  catch(err){
+    throw err;
+  }
+}
 
     return (
       <Container fluid>
-        <Row>
-          <Col size = "12">
-          
-            <Jumbotron>
-              <h1>What Books Should I Read?</h1>
-            </Jumbotron>
-            <form>
-              <Input
-                onChange={handleInputChange}
-                name="title"
-                placeholder="Title (required)"
-              />
-              <Input
-                onChange={handleInputChange}
-                name="author"
-                placeholder="Author (required)"
-              />
-              <TextArea
-                onChange={() => {}}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
-              />
-              <FormBtn
-                disabled={!(formObject.author && formObject.title)}
-                onClick={() => {}}
-              >
-                Submit Book
-              </FormBtn>
-            </form>
-            </Col>
-          </Row>
-          
           <Row>
           <Col size = "12">
             <Jumbotron>
-              <h1>Books On My List</h1>
+              <h1>My Personal Library</h1>
             </Jumbotron>
-            {books.length ? (
+            {books.length !== undefined ? (
               <List>
                 {books.map(book => {
                   return (
-                    <ListItem key={book.id}>
-                      {(book.volumeInfo.imageLinks.thumbnail) ? (
+                    <ListItem key={book._id}>
+                      {(book.thumbnail) ? (
   
-                      <img src = {book.volumeInfo.imageLinks.thumbnail} />
+                      <img src = {book.thumbnail} />
                       ) : (<h3>Image Unavailable</h3>)}
                         <strong>
-                          {book.volumeInfo.title} by {book.volumeInfo.authors}
+                          {book.title} by {book.author.join(", ")}
                         </strong>
+                        <DeleteBtn onClick = {() => handleDelete(book._id, book.title)}/>
                     </ListItem>
                   );
                 })}
