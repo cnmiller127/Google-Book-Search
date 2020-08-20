@@ -4,6 +4,7 @@ import DeleteBtn from "../components/DeleteBtn";
 import MongoAPI from "../utils/MongoAPI";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
+import DeleteBtnDisplay from "../components/DisplayDeleteBtn";
 
 
 function Saved() {
@@ -52,9 +53,11 @@ async function handleDelete(id, title) {
           <Row>
           <Col size = "12">
             <Jumbotron>
-              <h1>My Personal Library</h1>
+              <h1 className = "hdr">My Personal Library</h1>
             </Jumbotron>
             {books.length !== undefined ? (
+              <div>
+                <label> Click "{<DeleteBtnDisplay />}" to remove book from library!</label>
               <List>
                 {books.map(book => {
                   return (
@@ -71,6 +74,7 @@ async function handleDelete(id, title) {
                   );
                 })}
               </List>
+              </div>
             ) : (
               <h3>No Results to Display</h3>
             )}

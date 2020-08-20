@@ -5,7 +5,7 @@ import GoogleAPI from "../utils/GoogleAPI";
 import MongoAPI from "../utils/MongoAPI";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import { Input} from "../components/Form";
 import useDebounce from "../utils/deounceHook"
 
 function Books() {
@@ -16,8 +16,6 @@ function Books() {
     author: "",
     synopsis: ""
   })
-
-  //const [saveIcons, setSaveIcons] = useState([true]);
 
   const debouncedSearchTerm = useDebounce(formObject, 5000);
 
@@ -107,47 +105,41 @@ function Books() {
           <Col size = "12">
           
             <Jumbotron>
-              <h1>What Books Should I Read?</h1>
+              <h1 className ="hdr">Search books!</h1>
             </Jumbotron>
+            <label>Search by book title and/or author: </label>
             <form>
               <Input
                 onChange={handleInputChange}
                 name="title"
-                placeholder="Title (required)"
+                placeholder="Title"
               />
               <Input
                 onChange={handleInputChange}
                 name="author"
-                placeholder="Author (required)"
+                placeholder="Author"
               />
-              {/* <TextArea
-                onChange={() => {}}
-                name="synopsis"
-                placeholder="Synopsis (Optional)"
-              /> */}
-              <FormBtn
-                disabled={!(formObject.author && formObject.title)}
-                onClick={() => {}}
-              >
-                Submit Book
-              </FormBtn>
             </form>
             </Col>
           </Row>
           
           <Row>
           <Col size = "12">
-            <Jumbotron>
-              <h1>Books On My List</h1>
-            </Jumbotron>
             {books.length ? (
+              <div>
+              <label>Click "💾" to save books to your personal library!</label>
+              
               <List>
                 {books.map(book => {
                   return (
                     <ListItem key={book.id}>
-                      {(book.volumeInfo.imageLinks.thumbnail !== undefined) ? (
-  
-                      <img src = {book.volumeInfo.imageLinks.thumbnail } />
+                      {(book.volumeInfo.imageLinks) ? (
+                          (book.volumeInfo.imageLinks.thumbnail) ? (
+                      <img src = {book.volumeInfo.imageLinks.thumbnail } />) : 
+                      (
+                        <img src = {book.volumeInfo.imageLinks.smallThumbnail } />)
+                        
+
                       ) : (<h3>Image Unavailable</h3>)}
                         <strong>
                           {book.volumeInfo.title} by {book.volumeInfo.authors}
@@ -160,6 +152,7 @@ function Books() {
                   );
                 })}
               </List>
+              </div>
             ) : (
               <h3>No Results to Display</h3>
             )}
