@@ -1,5 +1,6 @@
 import React, {useEffect, useContext} from "react";
 import {NavContext} from "../../../src/UserContext";
+import "./style.css";
 
 function Nav() {
   

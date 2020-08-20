@@ -18,7 +18,7 @@ function Books() {
     synopsis: ""
   })
 
-  const debouncedSearchTerm = useDebounce(formObject, 5000);
+  const debouncedSearchTerm = useDebounce(formObject, 800);
 
   const NavStat = () => {
     const contextVal = useContext(NavContext);
