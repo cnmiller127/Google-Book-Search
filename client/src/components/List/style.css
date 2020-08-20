@@ -33,5 +33,7 @@
 }
 
 .list-group-item{
-  vertical-align: middle;
+  border-style: solid;
+  border-color: black;
+  border-width: 1px;
 }

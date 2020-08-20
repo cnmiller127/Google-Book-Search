@@ -58,15 +58,17 @@ async function handleDelete(id, title) {
 }
 
     return ( 
+      <div>
+      <Jumbotron>
+        <h1 className = "hdr">My Personal Library</h1>
+      </Jumbotron>
       <Container fluid>
           <Row>
           <Col size = "12">
-            <Jumbotron>
-              <h1 className = "hdr">My Personal Library</h1>
-            </Jumbotron>
+           
             {books.length !== undefined ? (
               <div>
-                <label> Click "{<DeleteBtnDisplay />}" to remove book from library!</label>
+                <label className = "label"> Click "{<DeleteBtnDisplay />}" to remove book from library!</label>
               <List>
                 {books.map(book => {
                   return (
@@ -79,6 +81,9 @@ async function handleDelete(id, title) {
                           {book.title} by {book.author.join(", ")}
                         </strong>
                         <DeleteBtn onClick = {() => handleDelete(book._id, book.title)}/>
+                        <hr></hr>
+                        <a href = {book.link}>Click here</a><span> to view this book on Google Books! </span>
+
                     </ListItem>
                   );
                 })}
@@ -90,6 +95,7 @@ async function handleDelete(id, title) {
           </Col>
         </Row>
       </Container>
+      </div>
     );
   }
 

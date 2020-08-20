@@ -81,7 +81,7 @@ function Books() {
     var book = {
     title: bookInfo.volumeInfo.title,
     author: bookInfo.volumeInfo.authors,
-    link: bookInfo.selfLink ,
+    link: bookInfo.volumeInfo.infoLink,
     thumbnail: thumb
     }
     console.log(book);
@@ -107,14 +107,17 @@ function Books() {
 
 
     return (
+      <div>
+      <Jumbotron>
+      <h1 className ="hdr">Explore Books!</h1>
+    </Jumbotron>
+    
       <Container fluid>
         <Row>
           <Col size = "12">
           
-            <Jumbotron>
-              <h1 className ="hdr">Look for Books!</h1>
-            </Jumbotron>
-            <label>Search by book title and/or author: </label>
+           
+            <label className = "label">Search by book title and/or author: </label>
             <form>
               <Input
                 onChange={handleInputChange}
@@ -134,7 +137,7 @@ function Books() {
           <Col size = "12">
             {books.length ? (
               <div>
-              <label>Click "💾" to save books to your personal library!</label>
+              <label className = "label">Click "💾" to save books to your personal library!</label>
               
               <List>
                 {books.map(book => {
@@ -154,6 +157,9 @@ function Books() {
                         {!book.saved ? (
                         <SaveBtn onClick={() => saveClick(book)} />
                         ) : null }
+                        <hr></hr>
+                        <a href = {book.volumeInfo.infoLink}>Click here</a><span> to view this book on Google Books! </span>
+                       
                         
                     </ListItem>
                   );
@@ -161,11 +167,12 @@ function Books() {
               </List>
               </div>
             ) : (
-              <h3>No Results to Display</h3>
+              <h3 className = "label">No Results to Display</h3>
             )}
           </Col>
         </Row>
       </Container>
+      </div>
     );
   }
 
